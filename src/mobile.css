@@ -1,0 +1,63 @@
+/* Touch basics for the whole desktop UI (touch plan T1). Loaded after the desktop CSS. */
+
+html,
+body {
+  /* No page bounce, no double-tap zoom, no long-press callouts or text selection outside text fields. */
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+input,
+textarea,
+select,
+[contenteditable='true'],
+.ProseMirror {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+/* The canvases handle fingers themselves (draw, pinch, pan). */
+canvas,
+.konvajs-content {
+  touch-action: none;
+}
+/* Below 16px iOS zooms the page into a text field when it is tapped. */
+input,
+textarea,
+select {
+  font-size: max(16px, 1em);
+}
+/* Keep clear of the notch, rounded corners and the home bar. */
+#root {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  box-sizing: border-box;
+}
+
+@media (pointer: coarse) {
+  /* Big enough for a finger (Apple and Google ask for about 44px). */
+  /* Lazily loaded tool CSS comes after this file, hence !important below. */
+  button,
+  [role='button'],
+  select {
+    min-height: 40px;
+    min-width: 40px;
+  }
+  input[type='checkbox'],
+  input[type='radio'] {
+    width: 22px;
+    height: 22px;
+  }
+  /* Buttons that only appear on hover would never show without a mouse. */
+  .brushlib-brush-actions,
+  .brushlib-set-more,
+  .wp-actions,
+  .cd-card-actions,
+  .sidebar-doc-delete {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
+  }
+}

@@ -1,0 +1,35 @@
+[package]
+name = "evlmg-designer-mobile"
+version = "0.1.0"
+description = "Eve.Lopment Games Designer for phones and tablets"
+authors = ["Evelopment Games"]
+license = "GPL-3.0-only"
+edition = "2024"
+rust-version = "1.90"
+
+[lib]
+name = "evlmg_mobile_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.7.1", features = [] }
+
+# Same versions as desktop/src-tauri/Cargo.toml, because src/lib.rs builds the desktop's own Rust files.
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+tauri = { version = "2.12.1", features = ["protocol-asset"] }
+tauri-plugin-log = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-opener = "2"
+spellbook = "0.4"
+anyhow = "1.0.104"
+iroh = "1.3.0"
+tokio = { version = "1", features = ["sync", "macros", "rt-multi-thread", "io-util", "time"] }
+tokio-tungstenite = { version = "0.29", default-features = false, features = ["connect", "__rustls-tls"] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std"] }
+rustls-platform-verifier = "0.7"
+sha2 = "0.10"
+futures-util = "0.3"

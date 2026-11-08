@@ -1,0 +1,85 @@
+name: Mobile builds
+
+# Tests on every push; phone builds when started by hand (Actions tab, "Run workflow") or for a v* tag.
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+
+  android:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: android-actions/setup-android@v3
+      - name: Android NDK
+        run: |
+          sdkmanager "ndk;27.2.12479018"
+          echo "NDK_HOME=$ANDROID_SDK_ROOT/ndk/27.2.12479018" >> "$GITHUB_ENV"
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - run: npm ci
+      - run: npx tauri android init --ci
+      # Debug build: signed with Android's test key, so it installs on any phone with "install unknown apps" on.
+      # shortcut: a store/release build needs our own signing key as a GitHub secret.
+      - run: npx tauri android build --apk --debug --ci
+      - uses: actions/upload-artifact@v4
+        with:
+          name: evlmg-designer-android
+          path: src-tauri/gen/android/app/build/outputs/apk/**/*.apk
+
+  ios:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    needs: test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios,aarch64-apple-ios-sim
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - run: npm ci
+      - run: npx tauri ios init --ci
+      # Simulator build only: installing on a real iPhone/iPad needs an Apple Developer account (99 a year) for signing.
+      - run: npx tauri ios build --target aarch64-sim --debug --ci
+      - uses: actions/upload-artifact@v4
+        with:
+          name: evlmg-designer-ios-simulator
+          path: src-tauri/gen/apple/build/**/*.app
