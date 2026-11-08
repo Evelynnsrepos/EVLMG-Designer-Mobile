@@ -33,3 +33,8 @@ rustls = { version = "0.23", default-features = false, features = ["ring", "std"
 rustls-platform-verifier = "0.7"
 sha2 = "0.10"
 futures-util = "0.3"
+
+# Android: hand the app's Java context to the certificate checker (android_tls in src/lib.rs).
+[target.'cfg(target_os = "android")'.dependencies]
+jni = { version = "0.22", default-features = false }
+ndk-context = "0.1"

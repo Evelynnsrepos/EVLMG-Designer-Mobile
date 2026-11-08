@@ -42,7 +42,7 @@ npm install
 npm test               # compatibility and touch tests
 npm run dev            # the app in a browser, try it with your browser's touch emulation
 npm run tauri dev      # the mobile build in a window on your computer (needs Rust, like the desktop app)
-npm run android        # on an Android phone or emulator (needs Android Studio + NDK, after `npx tauri android init`)
+npm run android        # on an Android phone or emulator (needs Android Studio + NDK, after `npx tauri android init && scripts/android-setup.sh`)
 npm run ios            # on an iPhone/iPad simulator (needs a Mac with Xcode, after `npx tauri ios init`)
 ```
 

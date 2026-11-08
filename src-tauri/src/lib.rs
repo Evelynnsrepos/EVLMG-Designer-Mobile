@@ -47,6 +47,8 @@ pub fn run() {
       not_on_mobile::plugin_download,
     ])
     .setup(|app| {
+      #[cfg(target_os = "android")]
+      android_tls().map_err(|e| format!("Could not set up secure connections: {e}"))?;
       if cfg!(debug_assertions) {
         app.handle().plugin(tauri_plugin_log::Builder::default().level(log::LevelFilter::Info).build())?;
       }
@@ -54,4 +56,17 @@ pub fn run() {
     })
     .run(tauri::generate_context!())
     .expect("error while running the app");
+}
+
+/// On Android the system certificate check (used by the server link and by peer-to-peer relays) calls into Java,
+/// so it must get the app's context once before the first secure connection, or that connection crashes.
+/// The Java half is added to the Android build by scripts/android-setup.sh.
+#[cfg(target_os = "android")]
+fn android_tls() -> Result<(), jni::errors::Error> {
+  let ctx = ndk_context::android_context();
+  let vm = unsafe { jni::JavaVM::from_raw(ctx.vm().cast()) };
+  vm.attach_current_thread(|env| {
+    let context = unsafe { jni::objects::JObject::from_raw(env, ctx.context().cast()) };
+    rustls_platform_verifier::android::init_with_env(env, context)
+  })
 }

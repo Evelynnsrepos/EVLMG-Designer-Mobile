@@ -48,7 +48,7 @@ jobs:
         with:
           workspaces: src-tauri
       - run: npm ci
-      - run: npx tauri android init --ci
+      - run: npx tauri android init --ci && scripts/android-setup.sh
       # Debug build for 64-bit ARM (nearly every phone and tablet since 2017): signed with Android's test key, so it installs on any phone with "install unknown apps" on.
       # shortcut: a store/release build needs our own signing key as a GitHub secret.
       - run: npx tauri android build --apk --debug --target aarch64 --ci
