@@ -20,6 +20,31 @@ jobs:
       - run: npm run typecheck
       - run: npm test
 
+  # The app's server code against the real EVLMG Server (latest main of its repo).
+  server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: actions/checkout@v4
+        with:
+          repository: Evelynnsrepos/Evelopment-Games-Designer-Server
+          path: egd-server
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: egd-server/server
+      - run: cargo build --manifest-path egd-server/server/Cargo.toml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx vitest run src/server.test.ts
+        env:
+          EGD_SERVER_BIN: ${{ github.workspace }}/egd-server/server/target/debug/egd-server
+
   android:
     if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
     needs: test

@@ -14,7 +14,7 @@ repositories {
     maven { url = uri("https://github.com/rustls/rustls-platform-verifier/raw/maven-archive/android-release-support/maven/") }
 }
 dependencies {
-    implementation("rustls:rustls-platform-verifier:$version")
+    implementation("org.rustls:rustls-platform-verifier:$version")
 }
 GRADLE
 # Called from Rust through JNI only, so a release build's shrinker would remove it.
