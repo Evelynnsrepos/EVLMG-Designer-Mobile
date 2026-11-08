@@ -40,8 +40,17 @@ How projects move between devices:
   app" instead of failing.
 - CI: tests on every push; Android debug APK and iOS simulator build on demand.
 
-**Not tested yet:** a real Android or iOS build (this cloud machine can't download the Android tools, and iOS needs
-a Mac), P2P and the server link on a phone. The first "Run workflow" in GitHub Actions is the first real build.
+**Builds (2026-11-08):** the Android APK and the iOS simulator app build in GitHub Actions.
+
+**Server:** the app's Rust server link connects to the real EVLMG Server (self-signed mode: pins the certificate,
+refuses a wrong one), and the desktop's real-server tests (upload, join later, view-only, bad key) pass with the code
+this app ships; CI runs them against the server repo's latest code (`src/server.test.ts`). Android needs its system
+certificate check set up for servers with a real certificate and for peer-to-peer relays: `android_tls()` in
+`src-tauri/src/lib.rs` plus `scripts/android-setup.sh`.
+
+**Not tested yet:** anything on a real phone, and P2P on a phone.
+
+Which tools need touch or phone layout work: [MOBILE-TOOLS.md](MOBILE-TOOLS.md).
 
 ## 3. Next steps (each about one work thread *(guess)*)
 
