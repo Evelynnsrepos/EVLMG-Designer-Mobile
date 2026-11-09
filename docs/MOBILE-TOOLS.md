@@ -146,12 +146,12 @@ tablet or phone yet.
 
 | Tool / feature | Notes |
 |---|---|
-| Integration work: `meta.palette`, Asset Pool files in `assets/files/`, plugin API additions | Covered by `src/compat.test.ts`. The **server** only accepts `assets/files/` after its `feat/asset-files` branch is merged and released, so until then Asset Pool files don't sync through a server (P2P works). |
+| Integration work: `meta.palette`, Asset Pool files in `assets/files/`, plugin API additions | Covered by `src/compat.test.ts`. The server accepts `assets/files/` from server v0.8.0 (merged 2026-11-09). |
 | Custom List (new tool `custom-list`) | New document type, additive; shared code, comes along with the submodule. |
 | Storyboard scenes/cuts, Sheet view, exports | Sheet view stacks on narrow screens. Animatic WebM export depends on WebCodecs/MediaRecorder in the iOS WebView *(guess: may fall back or fail on older iOS)*. |
 | Shape snap + Shaky hands | Pen and touch use the same hold-to-snap; check that a resting finger doesn't snap by accident. Setting lives in app data, not the project. |
 | Hotkey hints on by default | Should be switched off on touch-only devices (see note above). |
-| Comment connect codes (`network.commentOnly`) | Client side only; needs the server's `feat/comment-role` to be released before anyone gets such a code. |
+| Comment connect codes (`network.commentOnly`) | Server v0.8.0 issues comment keys (merged 2026-11-09). Check on a phone that a comment code can add a review and nothing else. |
 
 ## Coming from the desktop: Material Lab
 
