@@ -143,3 +143,17 @@ Coming with the desktop "integration" work (not released yet, `patches/integrati
 `meta.palette` (project palette), Asset Pool files in `assets/files/` (P2P and server accept them), and plugin API
 additions (`SendMenu`, `sendImageTo`, `addImageTarget`, `useIntentHandler`, `useAssetUrl`). `src/compat.test.ts` already
 checks that a project with these keeps them through the mobile app. Bump the submodule again once that release is out.
+
+## Coming from the desktop: Material Lab
+
+Material Lab (node-based tiling textures, built on Material Maker's MIT node files) is being built in the desktop
+repo on `feat/material-lab`; desktop notes in `docs/MATERIAL-LAB.md` there. Keep both notes in sync.
+
+- **Build 1 (node engine, 2026-11-09):** shared code in `src/shared/material/`, plain WebGL2, no screen and **no
+  project format change**. Nothing to do here until the submodule is bumped to a desktop version that has it.
+  Phones without float render targets fall back to 8-bit textures (`MaterialRenderer.floatTextures`).
+- **Build 2 adds a new document type `material`** (the graph as JSON; textures are rebuilt on each device, only the
+  graph syncs over P2P and the server). It must be additive: today's mobile app skips the unknown type cleanly. When
+  the submodule is bumped to a desktop version with it, add a `material` fixture to `src/compat.test.ts`.
+- Touch plan from the UX plan: phones get the Simple view (gallery, sliders, preview) first; Layers and Graph views
+  are for tablets. One finger turns the preview, pinch zooms, long-press shows slider help.
