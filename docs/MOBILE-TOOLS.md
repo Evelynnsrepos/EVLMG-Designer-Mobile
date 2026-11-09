@@ -139,10 +139,19 @@ New since v0.25.1, all come along with the submodule. Not tried on a tablet or p
 | Vector (experimental, 0.27.0) | Same canvas as the Card Designer, so the same touch notes apply. |
 | Material Lab engine (0.26.0) | No screen yet, nothing to check. |
 
-Coming with the desktop "integration" work (not released yet, `patches/integration/` in the project files):
-`meta.palette` (project palette), Asset Pool files in `assets/files/` (P2P and server accept them), and plugin API
-additions (`SendMenu`, `sendImageTo`, `addImageTarget`, `useIntentHandler`, `useAssetUrl`). `src/compat.test.ts` already
-checks that a project with these keeps them through the mobile app. Bump the submodule again once that release is out.
+## Desktop v0.28.0 (submodule moved 2026-11-09)
+
+All additions are optional fields, so older projects open unchanged and `src/compat.test.ts` passes. Not tried on a
+tablet or phone yet.
+
+| Tool / feature | Notes |
+|---|---|
+| Integration work: `meta.palette`, Asset Pool files in `assets/files/`, plugin API additions | Covered by `src/compat.test.ts`. The **server** only accepts `assets/files/` after its `feat/asset-files` branch is merged and released, so until then Asset Pool files don't sync through a server (P2P works). |
+| Custom List (new tool `custom-list`) | New document type, additive; shared code, comes along with the submodule. |
+| Storyboard scenes/cuts, Sheet view, exports | Sheet view stacks on narrow screens. Animatic WebM export depends on WebCodecs/MediaRecorder in the iOS WebView *(guess: may fall back or fail on older iOS)*. |
+| Shape snap + Shaky hands | Pen and touch use the same hold-to-snap; check that a resting finger doesn't snap by accident. Setting lives in app data, not the project. |
+| Hotkey hints on by default | Should be switched off on touch-only devices (see note above). |
+| Comment connect codes (`network.commentOnly`) | Client side only; needs the server's `feat/comment-role` to be released before anyone gets such a code. |
 
 ## Coming from the desktop: Material Lab
 
