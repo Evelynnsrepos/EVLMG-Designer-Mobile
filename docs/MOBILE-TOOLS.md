@@ -127,3 +127,19 @@ that stays above the on-screen keyboard.
 
 All of this is shared code, so it belongs in the **desktop repo** (behind touch checks like `@media (pointer: coarse)`),
 not here. The mobile app then gets it with the next desktop version, and touch-screen laptops get it too.
+
+## Desktop v0.27.0 (submodule moved 2026-11-09)
+
+New since v0.25.1, all come along with the submodule. Not tried on a tablet or phone yet.
+
+| Tool / feature | Notes |
+|---|---|
+| Arrange button + finger drag of tools out of the sidebar (0.25.2) | The desktop's own touch answer to Esc layout mode. A sideways drag moves more than 10 px, so `src/touch.ts` cancels its long-press: the two should not fight. Check on a tablet. |
+| Draw light preview (0.26.0) | three.js view in a floating panel; pinch/drag already built in. Heavy on phones *(guess)*. |
+| Vector (experimental, 0.27.0) | Same canvas as the Card Designer, so the same touch notes apply. |
+| Material Lab engine (0.26.0) | No screen yet, nothing to check. |
+
+Coming with the desktop "integration" work (not released yet, `patches/integration/` in the project files):
+`meta.palette` (project palette), Asset Pool files in `assets/files/` (P2P and server accept them), and plugin API
+additions (`SendMenu`, `sendImageTo`, `addImageTarget`, `useIntentHandler`, `useAssetUrl`). `src/compat.test.ts` already
+checks that a project with these keeps them through the mobile app. Bump the submodule again once that release is out.
