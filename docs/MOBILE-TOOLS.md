@@ -27,7 +27,7 @@ Nothing was tried on a real device yet.
 |---|---|---|---|
 | S1 | Sidebar becomes a slide-in drawer on phones and portrait tablets | On a phone it takes 55% of the width | Medium |
 | S2 | Phones: one panel at a time, with the split view and panel rearranging turned off | Side-by-side panels are unusable at 390 px | Medium |
-| S3 | Hide keyboard-only hints on touch: the "Esc rearranges and closes tools" reminder (stays up forever without a keyboard), Hotkey hint mode | They point to keys that aren't there | Small |
+| S3 | Hide keyboard-only hints on touch: the "Esc rearranges and closes tools" reminder (stays up forever without a keyboard), Hotkey hint mode (on by default from desktop 1bf47ff on, so the mobile build should switch it off on touch-only devices) | They point to keys that aren't there | Small |
 | S4 | Drag and drop that uses the browser's HTML dragging: sidebar order, folders, dragging tools into panels | iPad does not start HTML drags from a finger reliably *(guess, must test)*; add "Move up/down" and "Open beside" to the long-press menus | Small–medium |
 | S5 | Tooltips (`title`) never show on touch | About 600 buttons explain themselves only on hover; icon-only buttons need a label or a long-press hint | Medium |
 | S6 | On-screen keyboard covering the field you type in | Keep the focused field above the keyboard | Small |
