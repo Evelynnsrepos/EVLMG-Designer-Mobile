@@ -67,6 +67,30 @@ describe('desktop <-> mobile project files', () => {
     expect(await getFs().readBinary(await getFs().join(await projectPaths.imagesDir(root), 'map.png'))).toEqual(image)
   })
 
+  it('keeps tools and files the other app may not know yet: Vector icons, Asset Pool files, the project palette', async () => {
+    setFs(new MemoryFs())
+    const p = await createProject({ name: 'Icons', description: '', components: ['vector', 'asset-pool'] })
+    const icon = { presetId: 'inventory', artboard: { width: 256, height: 256, bgColor: null }, scene: { layers: [], nodes: [] } }
+    await writeDocument(p.root, 'vector', 'v1', icon)
+    // An unknown tool from a later version, as an older app sees Vector.
+    await writeDocument(p.root, 'future-tool' as never, 'f1', { keep: 1 })
+    const file = 'assets/files/0f8fad5b-d9cb-469f-a165-70867728950e.blend'
+    await writeDocument(p.root, 'asset-pool', 'pool', { entries: [{ id: 'e1', name: 'Sword', kind: '3D model', files: [{ path: file, name: 'sword.blend' }] }] })
+    await getFs().writeBinaryAtomic(await getFs().join(p.root, file), image)
+    const docs = [{ id: 'v1', type: 'vector', title: 'Sword icon' }, { id: 'f1', type: 'future-tool', title: 'Later' }]
+    await saveMeta(p.root, { ...p.meta, palette: [{ hex: '#112233' }], documents: docs } as unknown as typeof p.meta)
+
+    const back = await openEditExport(await zipProject(p.root), 'Edited on my phone')
+    setFs(new MemoryFs())
+    const root = await importProjectZip(back)
+    const meta = (await loadProject(root)).meta as typeof p.meta & { palette: unknown }
+    expect(meta.palette).toEqual([{ hex: '#112233' }])
+    expect(meta.documents.map((d) => d.title)).toEqual(['Sword icon', 'Later'])
+    expect(await readDocument(root, 'vector', 'v1', () => null)).toEqual(icon)
+    expect(await readDocument(root, 'future-tool' as never, 'f1', () => null)).toEqual({ keep: 1 })
+    expect(await getFs().readBinary(await getFs().join(root, file))).toEqual(image)
+  })
+
   it('refuses a project from a newer version instead of damaging it', async () => {
     const zip = zipSync({ 'project.json': strToU8(JSON.stringify({ schemaVersion: SCHEMA_VERSION + 1, data: { name: 'New' } })) })
     setFs(new MemoryFs())
