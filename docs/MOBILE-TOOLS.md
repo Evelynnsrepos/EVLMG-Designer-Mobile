@@ -132,13 +132,13 @@ not here. The mobile app then gets it with the next desktop version, and touch-s
 
 Desktop adds a crate `src-tauri/texpaint` (glam + rayon, pure Rust, no platform code) and the commands in
 `src-tauri/src/texpaint_commands.rs` (`texpaint_load`, `texpaint_unload`, `texpaint_fill`, `texpaint_pick`,
-`texpaint_bake`). No project format change: fills are pixels on a layer, shape maps are ordinary image layers.
+`texpaint_bake`, `texpaint_wear`). No project format change: fills are pixels on a layer, shape maps are ordinary image layers.
 
 When the `desktop/` submodule is bumped to a version that has it, the mobile app needs:
 1. `src-tauri/Cargo.toml`: `texpaint = { path = "../desktop/src-tauri/texpaint" }` and the same
    `[profile.dev.package.texpaint] opt-level = 3` block.
 2. `src-tauri/src/lib.rs`: `#[path = "../../desktop/src-tauri/src/texpaint_commands.rs"] mod texpaint_commands;`,
-   `.manage(texpaint_commands::TexpaintState::default())` and the five commands in `generate_handler!`.
+   `.manage(texpaint_commands::TexpaintState::default())` and the six commands in `generate_handler!`.
 Without it the menus show "The model could not be prepared" and painting still works.
 Baking is CPU-only, so it runs on iOS and Android; on phones bake at 1024 (it uses all cores for a few seconds).
 
