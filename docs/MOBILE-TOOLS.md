@@ -102,7 +102,7 @@ Pen pressure and tilt already work (Apple Pencil, S Pen). Draw has full touch ge
 | Draw | ✅ | 🔴 | Has pinch zoom, two-finger undo, "finger draws" on/off. Needs palm rejection. Phones: panels need to become sheets |
 | Pixel Art | 🔴 | 🔴 | Right-click menus, mouse-wheel zoom, keyboard tools: needs Draw's gestures and a touch toolbar |
 | Level Layout | 🔴 | 🔴 | 11 canvas uses, keyboard shortcuts (R = Scatter), Shift/Alt modifiers: touch toolbar |
-| Texture Paint (3D) | 🔴 | 🔴 | Two-finger orbit and pinch zoom for the 3D view; memory limits on iPads |
+| Texture Paint (3D) | 🔴 | 🔴 | Two-finger orbit and pinch zoom for the 3D view; memory limits on iPads. Fill a part and shape maps need the Rust core (see below) |
 | Card Designer | 🔴 | 🔴 | Biggest tool (4,600 lines): right-click menus, Alt-click through layers, keyboard shortcuts, a wide export window. Tablet landscape first; phones view-only at first |
 
 ### Planning
@@ -127,3 +127,18 @@ that stays above the on-screen keyboard.
 
 All of this is shared code, so it belongs in the **desktop repo** (behind touch checks like `@media (pointer: coarse)`),
 not here. The mobile app then gets it with the next desktop version, and touch-screen laptops get it too.
+
+## Texture Paint's Rust core (desktop branch feat/texture-paint-core, 2026-11-14)
+
+Desktop adds a crate `src-tauri/texpaint` (glam + rayon, pure Rust, no platform code) and the commands in
+`src-tauri/src/texpaint_commands.rs` (`texpaint_load`, `texpaint_unload`, `texpaint_fill`, `texpaint_pick`,
+`texpaint_bake`). No project format change: fills are pixels on a layer, shape maps are ordinary image layers.
+
+When the `desktop/` submodule is bumped to a version that has it, the mobile app needs:
+1. `src-tauri/Cargo.toml`: `texpaint = { path = "../desktop/src-tauri/texpaint" }` and the same
+   `[profile.dev.package.texpaint] opt-level = 3` block.
+2. `src-tauri/src/lib.rs`: `#[path = "../../desktop/src-tauri/src/texpaint_commands.rs"] mod texpaint_commands;`,
+   `.manage(texpaint_commands::TexpaintState::default())` and the five commands in `generate_handler!`.
+Without it the menus show "The model could not be prepared" and painting still works.
+Baking is CPU-only, so it runs on iOS and Android; on phones bake at 1024 (it uses all cores for a few seconds).
+
