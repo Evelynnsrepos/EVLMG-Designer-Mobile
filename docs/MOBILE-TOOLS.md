@@ -139,5 +139,11 @@ repo on `feat/material-lab`; desktop notes in `docs/MATERIAL-LAB.md` there. Keep
 - **Build 2 adds a new document type `material`** (the graph as JSON; textures are rebuilt on each device, only the
   graph syncs over P2P and the server). It must be additive: today's mobile app skips the unknown type cleanly. When
   the submodule is bumped to a desktop version with it, add a `material` fixture to `src/compat.test.ts`.
+- **Build 2 built (2026-11-14, desktop branch `feat/material-lab-nodes`, not released):** 380 of 395 nodes run,
+  component type `material` (`components/material/<id>.json` = `{ graph, from?, variation? }`, graph in Material
+  Maker's `.ptex` JSON, see the desktop `docs/FORMAT.md`). Gallery of 31 example materials, lit preview (ball, tiled
+  floor, pixel-art tile), Simple view sliders, PNG map export. The screen is a plain WebGL2 canvas and range inputs,
+  so it should work on phones as is; the side panel stacks under the preview below 640 px. Preview drag uses pointer
+  events (one finger turns the ball); pinch zoom is not built yet.
 - Touch plan from the UX plan: phones get the Simple view (gallery, sliders, preview) first; Layers and Graph views
   are for tablets. One finger turns the preview, pinch zooms, long-press shows slider help.
