@@ -111,6 +111,11 @@ Pen pressure and tilt already work (Apple Pencil, S Pen). Draw has full touch ge
 | Task Board, Scope Planner | 🟡 | 🔴 | Kanban columns go off screen on a portrait tablet; cards move by HTML drag: add a "Move to…" menu |
 | Storyboard | ✅ | 🟡 | |
 
+### Shell
+| Tool | Tablet | Phone | Notes |
+|---|---|---|---|
+| Tool map (Tab, or the map button in the sidebar) | ✅ | 🟡 | Since desktop `unstable` 2026-11-23: tap a bubble once shows its links, tap again goes there, pinch zooms, a touch hint replaces the keyboard hint. No format change. Phone: the top bar is wide (find box + legend) |
+
 ### Spreadsheet
 🔴 on both. Selecting cells by dragging, 4 right-click menus, 6 double-click actions, keyboard navigation and formulas.
 It needs its own touch mode: tap selects, double-tap edits, drag handles to extend a selection, and a formula bar
